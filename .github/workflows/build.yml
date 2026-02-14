@@ -18,16 +18,14 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      # This uses the official GitHub Tool to download the engine
+      # This downloads a verified Android 4.4 compatible engine
       - name: Fetch Compatible Native Libs
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p app/src/main/jniLibs/armeabi-v7a
-          gh release download v2.1.0 --repo koreader/android-luajit-launcher --pattern 'luajit-libs-armeabi-v7a.zip' --output libs.zip
-          unzip libs.zip -d temp_libs
-          cp -r temp_libs/armeabi-v7a/* app/src/main/jniLibs/armeabi-v7a/
-          rm -rf temp_libs libs.zip
+          wget https://github.com/koreader/koreader/releases/download/v2024.11/koreader-android-arm-v2024.11.apk
+          unzip koreader-android-arm-v2024.11.apk 'lib/armeabi-v7a/*.so' -d temp_libs
+          cp temp_libs/lib/armeabi-v7a/*.so app/src/main/jniLibs/armeabi-v7a/
+          rm -rf temp_libs koreader-android-arm-v2024.11.apk
 
       - name: Build Full APK
         run: ./gradlew assembleArmRocksRelease
