@@ -77,7 +77,7 @@ object DeviceInfo {
         MOOINKPLUS2C,
         NABUK,
         NOOK,
-        NOOK_GL3,
+        NOOK_GL3, // Add Nook Glowlight3
         NOOK_GL4,
         NOOK_GLPLUS,
         OBOOK_P10D,
