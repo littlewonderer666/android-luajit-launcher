@@ -18,15 +18,21 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      # This downloads a verified Android 4.4 compatible engine
-      - name: Fetch Compatible Native Libs
+      # 1. Download the Full APK and extract the engine
+      - name: Fetch and Link Native Engine
         run: |
-          mkdir -p app/src/main/jniLibs/armeabi-v7a
+          mkdir -p app/libs/armeabi-v7a
           wget https://github.com/koreader/koreader/releases/download/v2024.11/koreader-android-arm-v2024.11.apk
-          unzip koreader-android-arm-v2024.11.apk 'lib/armeabi-v7a/*.so' -d temp_libs
-          cp temp_libs/lib/armeabi-v7a/*.so app/src/main/jniLibs/armeabi-v7a/
-          rm -rf temp_libs koreader-android-arm-v2024.11.apk
+          unzip koreader-android-arm-v2024.11.apk 'lib/armeabi-v7a/*.so' -d extracted
+          cp extracted/lib/armeabi-v7a/*.so app/libs/armeabi-v7a/
+          rm -rf extracted koreader-android-arm-v2024.11.apk
 
+      # 2. FORCE Gradle to look at app/libs for the engine
+      - name: Patch build.gradle for jniLibs
+        run: |
+          sed -i '/android {/a \    sourceSets { main { jniLibs.srcDirs = ["libs"] } }' app/build.gradle
+
+      # 3. Build the full package
       - name: Build Full APK
         run: ./gradlew assembleArmRocksRelease
 
