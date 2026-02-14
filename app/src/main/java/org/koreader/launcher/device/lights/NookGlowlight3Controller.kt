@@ -41,6 +41,9 @@ class NookGlowlight3Controller : LightsInterface {
     override fun getMaxBrightness(): Int = BRIGHTNESS_MAX
     override fun getMinWarmth(): Int = MIN
     override fun getMaxWarmth(): Int = WARMTH_MAX
+    
+    // Satisfy new interface requirement
+    override fun enableFrontlightSwitch(activity: Activity): Int = 1
 
     override fun getPlatform(): String = "nook-gl3-root"
     override fun hasFallback(): Boolean = false
