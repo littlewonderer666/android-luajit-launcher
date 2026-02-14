@@ -2,14 +2,14 @@ package org.koreader.launcher.device.lights
 
 import android.app.Activity
 import android.util.Log
-import org.koreader.launcher.device.LightController
+import org.koreader.launcher.device.LightsInterface
 import java.io.File
 
 /**
  * Custom light controller for Nook Glowlight 3 (bnrv520) on custom ROMs.
  * Uses the LM3630A unified driver paths found in /sys/class/backlight/lm3630a_led/
  */
-class NookGlowlight3Controller : LightController {
+class NookGlowlight3Controller : LightsInterface {
     companion object {
         private const val TAG = "Lights"
         private const val BRIGHTNESS_FILE = "/sys/class/backlight/lm3630a_led/brightness"
@@ -48,6 +48,11 @@ class NookGlowlight3Controller : LightController {
 
     override fun getMaxBrightness(): Int = BRIGHTNESS_MAX
     override fun getMaxWarmth(): Int = WARMTH_MAX
+
+    // Required by LightsInterface
+    override fun getPlatform(): String = "nook-gl3-root"
+    override fun hasFallback(): Boolean = false
+    override fun needsPermission(): Boolean = false
 
     private fun readIntFromFile(path: String): Int {
         return try {
